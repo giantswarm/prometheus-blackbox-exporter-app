@@ -15,6 +15,4 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 - First release featuring upstream version 7.5.0.
 
-[Unreleased]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.0.1...HEAD
-[0.0.1]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.0.1...v0.0.1
-[0.0.1]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.0.0...v0.0.1
+[Unreleased]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.0.0...HEAD
