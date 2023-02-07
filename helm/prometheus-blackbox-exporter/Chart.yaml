@@ -1,8 +1,10 @@
 apiVersion: v2
 description: Prometheus Blackbox Exporter
 name: prometheus-blackbox-exporter
-version: 7.5.0
+version: [[ .Version ]]
 appVersion: 0.23.0
+annotations:
+  application.giantswarm.io/team: "phoenix"
 home: https://github.com/prometheus/blackbox_exporter
 sources:
   - https://github.com/prometheus/blackbox_exporter
@@ -11,6 +13,9 @@ keywords:
   - prometheus
   - blackbox
   - monitoring
+restrictions:
+  clusterSingleton: true
+  fixedNamespace: kube-system
 maintainers:
   - name: desaintmartin
     email: cedric@desaintmartin.fr
