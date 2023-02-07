@@ -10,3 +10,5 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 ### Added
 
 - First release featuring upstream version 7.5.0.
+
+[Unreleased]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.0.0...HEAD
