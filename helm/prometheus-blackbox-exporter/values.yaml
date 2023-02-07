@@ -1,6 +1,6 @@
 restartPolicy: Always
 
-kind: Deployment
+kind: DaemonSet
 
 ## Override the namespace
 ##
@@ -114,7 +114,10 @@ readinessProbe:
     port: http
 
 nodeSelector: {}
-tolerations: []
+tolerations:
+  - effect: NoSchedule
+    operator: "Exists"
+    key: node-role.kubernetes.io/master
 affinity: {}
 
 # if the configuration is managed as secret outside the chart, using SealedSecret for example,
@@ -132,6 +135,28 @@ config:
         valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
         follow_redirects: true
         preferred_ip_protocol: "ip4"
+    dns_tcp_external:
+      prober: dns
+      dns:
+        transport_protocol: "tcp"
+        preferred_ip_protocol: "ip4"
+        query_name: "www.prometheus.io"
+    dns_udp_external:
+      prober: dns
+      dns:
+        preferred_ip_protocol: "ip4"
+        query_name: "www.prometheus.io"
+    dns_tcp_internal:
+      prober: dns
+      dns:
+        transport_protocol: "tcp"
+        preferred_ip_protocol: "ip4"
+        query_name: "kubernetes.default.svc.cluster.local"
+    dns_udp_internal:
+      prober: dns
+      dns:
+        preferred_ip_protocol: "ip4"
+        query_name: "kubernetes.default.svc.cluster.local"
 
 # Set custom config path, other than default /config/blackbox.yaml. If let empty, path will be "/config/blackbox.yaml"
 # configPath: "/foo/bar"
@@ -153,11 +178,13 @@ extraSecretMounts: []
   #   readOnly: true
   #   defaultMode: 420
 
-resources: {}
-  # limits:
-  #   memory: 300Mi
-  # requests:
-  #   memory: 50Mi
+resources:
+  limits:
+    memory: 100Mi
+    cpu: 30m
+  requests:
+    memory: 20Mi
+    cpu: 10m
 
 priorityClassName: ""
 
@@ -233,7 +260,7 @@ serviceMonitor:
   ## If true, a ServiceMonitor CRD is created for a prometheus operator
   ## https://github.com/coreos/prometheus-operator for each target
   ##
-  enabled: false
+  enabled: true
 
   # Default values that will be used for all ServiceMonitors created by `targets`
   defaults:
@@ -251,15 +278,44 @@ serviceMonitor:
   bearerTokenFile:
 
   targets:
-#    - name: example                    # Human readable URL that will appear in Prometheus / AlertManager
-#      url: http://example.com/healthz  # The URL that blackbox will scrape
-#      hostname: example.com            # HTTP probes can accept an additional `hostname` parameter that will set `Host` header and TLS SNI
-#      labels: {}                       # Map of labels for ServiceMonitor. Overrides value set in `defaults`
-#      interval: 60s                    # Scraping interval. Overrides value set in `defaults`
-#      scrapeTimeout: 60s               # Scrape timeout. Overrides value set in `defaults`
-#      module: http_2xx                 # Module used for scraping. Overrides value set in `defaults`
-#      additionalMetricsRelabels: {}    # Map of metric labels and values to add
-#      additionalRelabeling: []         # List of metric relabeling actions to run
+    - name: giantswarm-http
+      target: https://giantswarm.io
+      hostname: giantswarm.io
+      labels:
+        application.giantswarm.io/team: phoenix
+      interval: 60s
+      module: http_2xx
+    - name: api-https
+      target: https://kubernetes.default.svc.cluster.local/livez
+      hostname: kubernetes.default.svc.cluster.local
+      labels:
+        application.giantswarm.io/team: phoenix
+      interval: 60s
+      module: http_2xx
+    - name: dns-tcp-external
+      target: coredns
+      labels:
+        application.giantswarm.io/team: phoenix
+      interval: 60s
+      module: dns_tcp_external
+    - name: dns-udp-external
+      target: coredns
+      labels:
+        application.giantswarm.io/team: phoenix
+      interval: 60s
+      module: dns_udp_external
+    - name: dns-tcp-internal
+      target: coredns
+      labels:
+        application.giantswarm.io/team: phoenix
+      interval: 60s
+      module: dns_tcp_external
+    - name: dns-udp-internal
+      target: coredns
+      labels:
+        application.giantswarm.io/team: phoenix
+      interval: 60s
+      module: dns_udp_external
 
 ## Custom PrometheusRules to be defined
 ## ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions
@@ -272,7 +328,7 @@ prometheusRule:
 ## Network policy for chart
 networkPolicy:
   # Enable network policy and allow access from anywhere
-  enabled: false
+  enabled: true
   # Limit access only from monitoring namespace
   # Before setting this value to true, you must add the name=monitoring label to the monitoring namespace
   # Network Policy uses label filtering
@@ -282,3 +338,7 @@ networkPolicy:
 ## These will be passed directly to the PodSpec of same.
 dnsPolicy:
 dnsConfig:
+
+cluster:
+  kubernetes:
+    clusterDomain: cluster.local
