@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Prometheus Blackbox Exporter
 name: prometheus-blackbox-exporter
-version: 1.0.0
+version: [[ .Version ]]
 appVersion: 0.23.0
 annotations:
   application.giantswarm.io/team: "phoenix"
