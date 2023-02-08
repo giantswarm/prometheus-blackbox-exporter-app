@@ -11,6 +11,10 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 - Allow cluster domain customization on servicemonitors and modules.
 
+### Changed
+
+- Default interval to 10 seconds on all probes.
+
 ## [0.1.0] - 2023-02-07
 
 ### Added
