@@ -10,6 +10,7 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 ### Added
 
 - Allow cluster domain customization on servicemonitors and modules.
+- Add json schema.
 
 ### Changed
 
