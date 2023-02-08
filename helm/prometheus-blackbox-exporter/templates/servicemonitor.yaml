@@ -29,15 +29,15 @@ spec:
       - {{ .module | default $.Values.serviceMonitor.defaults.module }}
       {{- if .target }}
       target:
-      - {{ .target }}
+      - {{ .target | replace "CLUSTERDOMAIN" $.Values.cluster.kubernetes.clusterDomain }}
       {{- end }}
       {{- if .hostname }}
       hostname:
-      - {{ .hostname }}
+      - {{ .hostname | replace "CLUSTERDOMAIN" $.Values.cluster.kubernetes.clusterDomain }}
       {{- end }}
       {{- if .query_name }}
       query_name:
-      - {{ .query_name }}
+      - {{ .query_name | replace "CLUSTERDOMAIN" $.Values.cluster.kubernetes.clusterDomain }}
       {{- end }}
     metricRelabelings:
       - sourceLabels: [instance]
