@@ -7,11 +7,11 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+### Added
+
+- Allow cluster domain customization on servicemonitors and modules.
+
 ## [0.1.0] - 2023-02-07
-
-## [0.0.1] - 2023-02-07
-
-## [0.0.1] - 2023-02-07
 
 ### Added
 

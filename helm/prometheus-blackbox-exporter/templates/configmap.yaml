@@ -8,5 +8,5 @@ metadata:
     {{- include "prometheus-blackbox-exporter.labels" . | nindent 4 }}
 {{ if .Values.secretConfig -}} stringData: {{- else -}} data: {{- end }}
   blackbox.yaml: |
-{{ toYaml .Values.config | indent 4 }}
+{{ toYaml .Values.config | replace "CLUSTERDOMAIN" .Values.cluster.kubernetes.clusterDomain | indent 4 }}
 {{- end }}
