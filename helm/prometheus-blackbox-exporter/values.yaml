@@ -170,7 +170,7 @@ config:
                 }
               }
           }
-        #Base64 encoded response from [{"op":"add","path":"/spec/volumes","value":[{"name":"aws-iam-token","projected":{"sources":[{"serviceAccountToken":{"audience":"sts.amazonaws.com","expirationSeconds":86400,"path":"token"}}]}}]},{"op":"add","path":"/spec/containers","value":[]}]
+        # Base64 encoded response from [{"op":"add","path":"/spec/volumes","value":[{"name":"aws-iam-token","projected":{"sources":[{"serviceAccountToken":{"audience":"sts.amazonaws.com","expirationSeconds":86400,"path":"token"}}]}}]},{"op":"add","path":"/spec/containers","value":[]}]
         fail_if_body_not_matches_regexp:
           - "W3sib3AiOiJhZGQiLCJwYXRoIjoiL3NwZWMvdm9sdW1lcyIsInZhbHVlIjpbeyJuYW1lIjoiYXdzLWlhbS10b2tlbiIsInByb2plY3RlZCI6eyJzb3VyY2VzIjpbeyJzZXJ2aWNlQWNjb3VudFRva2VuIjp7ImF1ZGllbmNlIjoic3RzLmFtYXpvbmF3cy5jb20iLCJleHBpcmF0aW9uU2Vjb25kcyI6ODY0MDAsInBhdGgiOiJ0b2tlbiJ9fV19fV19LHsib3AiOiJhZGQiLCJwYXRoIjoiL3NwZWMvY29udGFpbmVycyIsInZhbHVlIjpbXX1d"
     dns_tcp_external:
