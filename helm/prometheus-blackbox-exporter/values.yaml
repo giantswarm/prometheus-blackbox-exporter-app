@@ -133,8 +133,46 @@ config:
       timeout: 5s
       http:
         valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
-        follow_redirects: true
         preferred_ip_protocol: "ip4"
+        follow_redirects: true
+    http_2xx_k8sca:
+      prober: http
+      timeout: 5s
+      http:
+        valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+        preferred_ip_protocol: "ip4"
+        follow_redirects: true
+        tls_config:
+          ca_file: "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+    http_irsa_webhook:
+      prober: http
+      timeout: 5s
+      http:
+        valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+        preferred_ip_protocol: "ip4"
+        follow_redirects: true
+        method: POST
+        tls_config:
+          insecure_skip_verify: true
+        headers:
+          Content-Type: application/json
+        body: |
+          {
+              "kind": "AdmissionReview",
+              "apiVersion": "admission.k8s.io/v1beta1",
+              "request": {
+                "namespace": "kube-system",
+                "object": {
+                  "spec": {
+                    "serviceAccountName": "external-dns",
+                    "serviceAccount": "external-dns"
+                  }
+                }
+              }
+          }
+        #Base64 encoded response from [{"op":"add","path":"/spec/volumes","value":[{"name":"aws-iam-token","projected":{"sources":[{"serviceAccountToken":{"audience":"sts.amazonaws.com","expirationSeconds":86400,"path":"token"}}]}}]},{"op":"add","path":"/spec/containers","value":[]}]
+        fail_if_body_not_matches_regexp:
+          - "W3sib3AiOiJhZGQiLCJwYXRoIjoiL3NwZWMvdm9sdW1lcyIsInZhbHVlIjpbeyJuYW1lIjoiYXdzLWlhbS10b2tlbiIsInByb2plY3RlZCI6eyJzb3VyY2VzIjpbeyJzZXJ2aWNlQWNjb3VudFRva2VuIjp7ImF1ZGllbmNlIjoic3RzLmFtYXpvbmF3cy5jb20iLCJleHBpcmF0aW9uU2Vjb25kcyI6ODY0MDAsInBhdGgiOiJ0b2tlbiJ9fV19fV19LHsib3AiOiJhZGQiLCJwYXRoIjoiL3NwZWMvY29udGFpbmVycyIsInZhbHVlIjpbXX1d"
     dns_tcp_external:
       prober: dns
       dns:
@@ -278,20 +316,20 @@ serviceMonitor:
   bearerTokenFile:
 
   targets:
-    - name: giantswarm-http
-      target: https://giantswarm.io
-      hostname: giantswarm.io
+    - name: http-giantswarm
+      target: https://www.giantswarm.io
+      hostname: www.giantswarm.io
       interval: 30s
       labels:
         application.giantswarm.io/team: phoenix
       module: http_2xx
-    - name: api-https
+    - name: http-api
       target: https://kubernetes.default.svc.CLUSTERDOMAIN/livez
       hostname: kubernetes.default.svc.CLUSTERDOMAIN
       interval: 30s
       labels:
         application.giantswarm.io/team: phoenix
-      module: http_2xx
+      module: http_2xx_k8sca
     - name: dns-tcp-external
       target: coredns
       labels:
