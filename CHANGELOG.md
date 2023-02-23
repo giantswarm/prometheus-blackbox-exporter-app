@@ -7,6 +7,14 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+## [0.2.1] - 2023-02-14
+
+### Changed
+
+- Change default timeouts and scraping configuration
+
+## [0.2.0] - 2023-02-09
+
 ### Added
 
 - Allow cluster domain customization on servicemonitors and modules.
@@ -22,5 +30,7 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 - First release featuring upstream version 7.5.0.
 
-[Unreleased]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.1.0...v0.2.1
+[0.2.0]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.0.0...v0.1.0
