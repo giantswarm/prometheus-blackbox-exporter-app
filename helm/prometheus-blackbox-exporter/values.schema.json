@@ -136,6 +136,98 @@
                                     "type": "string"
                                 }
                             }
+                        },
+                        "http_2xx_k8sca": {
+                            "type": "object",
+                            "properties": {
+                                "http": {
+                                    "type": "object",
+                                    "properties": {
+                                        "follow_redirects": {
+                                            "type": "boolean"
+                                        },
+                                        "preferred_ip_protocol": {
+                                            "type": "string"
+                                        },
+                                        "tls_config": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ca_file": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "valid_http_versions": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "prober": {
+                                    "type": "string"
+                                },
+                                "timeout": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "http_irsa_webhook": {
+                            "type": "object",
+                            "properties": {
+                                "http": {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "type": "string"
+                                        },
+                                        "fail_if_body_not_matches_regexp": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "follow_redirects": {
+                                            "type": "boolean"
+                                        },
+                                        "headers": {
+                                            "type": "object",
+                                            "properties": {
+                                                "Content-Type": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "method": {
+                                            "type": "string"
+                                        },
+                                        "preferred_ip_protocol": {
+                                            "type": "string"
+                                        },
+                                        "tls_config": {
+                                            "type": "object",
+                                            "properties": {
+                                                "insecure_skip_verify": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        },
+                                        "valid_http_versions": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "prober": {
+                                    "type": "string"
+                                },
+                                "timeout": {
+                                    "type": "string"
+                                }
+                            }
                         }
                     }
                 }
@@ -186,10 +278,13 @@
         "image": {
             "type": "object",
             "properties": {
+                "name": {
+                    "type": "string"
+                },
                 "pullPolicy": {
                     "type": "string"
                 },
-                "repository": {
+                "registry": {
                     "type": "string"
                 },
                 "tag": {
@@ -502,6 +597,9 @@
                         "type": "object",
                         "properties": {
                             "hostname": {
+                                "type": "string"
+                            },
+                            "interval": {
                                 "type": "string"
                             },
                             "labels": {

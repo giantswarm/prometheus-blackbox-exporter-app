@@ -77,7 +77,8 @@ strategy:
   type: RollingUpdate
 
 image:
-  repository: prom/blackbox-exporter
+  registry: docker.io
+  name: giantswarm/blackbox-exporter
   tag: v0.23.0
   pullPolicy: IfNotPresent
 
