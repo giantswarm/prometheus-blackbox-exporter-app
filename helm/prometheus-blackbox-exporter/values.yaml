@@ -77,7 +77,7 @@ strategy:
   type: RollingUpdate
 
 image:
-  registry: quay.io
+  registry: docker.io
   name: giantswarm/blackbox-exporter
   tag: v0.23.0
   pullPolicy: IfNotPresent
