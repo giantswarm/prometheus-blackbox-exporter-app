@@ -7,6 +7,10 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+### Fixed
+
+- Change image registry for DaemonSet.
+
 ## [0.3.0] - 2023-03-16
 
 ### Changed
