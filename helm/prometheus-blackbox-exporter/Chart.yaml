@@ -5,7 +5,8 @@ version: [[ .Version ]]
 appVersion: 0.23.0
 annotations:
   application.giantswarm.io/team: "phoenix"
-home: https://github.com/prometheus/blackbox_exporter
+home: https://github.com/giantswarm/prometheus-blackbox-exporter-app
+icon: https://s.giantswarm.io/app-icons/prometheus/1/light.svg
 sources:
   - https://github.com/prometheus/blackbox_exporter
   - https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-blackbox-exporter
