@@ -119,6 +119,9 @@ tolerations:
   - effect: NoSchedule
     operator: "Exists"
     key: node-role.kubernetes.io/master
+  - effect: NoSchedule
+    operator: "Exists"
+    key: node-role.kubernetes.io/control-plane
 affinity: {}
 
 # if the configuration is managed as secret outside the chart, using SealedSecret for example,
