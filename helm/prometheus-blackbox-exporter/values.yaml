@@ -380,3 +380,7 @@ dnsConfig:
 cluster:
   kubernetes:
     clusterDomain: cluster.local
+
+global:
+  podSecurityStandards:
+    enforced: false
