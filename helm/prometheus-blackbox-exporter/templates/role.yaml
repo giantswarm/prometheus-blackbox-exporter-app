@@ -6,7 +6,7 @@ metadata:
     {{- include "prometheus-blackbox-exporter.labels" . | nindent 4 }}
   name: {{ template "prometheus-blackbox-exporter.fullname" . }}
   namespace: {{ template "prometheus-blackbox-exporter.namespace" . }}
-rules:
+rules: {{ if .Values.global.podSecurityStandards.enforced }}[]{{ else }}
   - apiGroups:
     - policy
     resources:
@@ -15,4 +15,5 @@ rules:
     - {{ template "prometheus-blackbox-exporter.fullname" . }}-psp
     verbs:
     - use
+{{- end -}}
 {{- end -}}
