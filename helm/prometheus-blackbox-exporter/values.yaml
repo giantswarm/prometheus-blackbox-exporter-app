@@ -77,7 +77,7 @@ strategy:
   type: RollingUpdate
 
 image:
-  registry: docker.io
+  registry: gsoci.azurecr.io
   name: giantswarm/blackbox-exporter
   tag: v0.23.0
   pullPolicy: IfNotPresent
