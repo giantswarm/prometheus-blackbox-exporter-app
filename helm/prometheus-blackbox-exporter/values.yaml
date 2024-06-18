@@ -324,35 +324,23 @@ serviceMonitor:
       target: https://www.giantswarm.io
       hostname: www.giantswarm.io
       interval: 30s
-      labels:
-        application.giantswarm.io/team: phoenix
       module: http_2xx
     - name: http-api
       target: https://kubernetes.default.svc.CLUSTERDOMAIN/livez
       hostname: kubernetes.default.svc.CLUSTERDOMAIN
       interval: 30s
-      labels:
-        application.giantswarm.io/team: phoenix
       module: http_2xx_k8sca
     - name: dns-tcp-external
       target: coredns
-      labels:
-        application.giantswarm.io/team: phoenix
       module: dns_tcp_external
     - name: dns-udp-external
       target: coredns
-      labels:
-        application.giantswarm.io/team: phoenix
       module: dns_udp_external
     - name: dns-tcp-internal
       target: coredns
-      labels:
-        application.giantswarm.io/team: phoenix
       module: dns_tcp_external
     - name: dns-udp-internal
       target: coredns
-      labels:
-        application.giantswarm.io/team: phoenix
       module: dns_udp_external
 
 ## Custom PrometheusRules to be defined
