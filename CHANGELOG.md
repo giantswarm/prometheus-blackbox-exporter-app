@@ -7,15 +7,15 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+### Fixed
+
+- Remove duplicated team label.
+
 ## [0.4.1] - 2023-12-20
 
 ### Changed
 
 - Configure `gsoci.azurecr.io` as the default container image registry.
-
-### Fixed
-
-- Remove duplicated team label.
 
 ## [0.4.0] - 2023-10-18
 
