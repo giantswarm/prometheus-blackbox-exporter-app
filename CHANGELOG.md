@@ -7,6 +7,10 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+### Fixed
+
+- Remove duplicated team label.
+
 ## [0.4.1] - 2023-12-20
 
 ### Changed
