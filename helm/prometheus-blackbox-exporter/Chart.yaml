@@ -1,10 +1,11 @@
 apiVersion: v2
 description: Prometheus Blackbox Exporter
 name: prometheus-blackbox-exporter
-version: [[ .Version ]]
-appVersion: 0.23.0
+version: 0.0.1-dev
+appVersion: 0.0.1-dev
 annotations:
   application.giantswarm.io/team: "phoenix"
+  ui.giantswarm.io/logo: https://s.giantswarm.io/app-icons/prometheus/1/light.svg
 home: https://github.com/giantswarm/prometheus-blackbox-exporter-app
 icon: https://s.giantswarm.io/app-icons/prometheus/1/light.svg
 sources:
@@ -17,6 +18,7 @@ keywords:
 restrictions:
   clusterSingleton: true
   fixedNamespace: kube-system
+  gpuInstances: false
 maintainers:
   - name: desaintmartin
     email: cedric@desaintmartin.fr

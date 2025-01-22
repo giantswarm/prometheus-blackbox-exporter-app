@@ -1,5 +1,7 @@
 restartPolicy: Always
 
+serviceType: managed
+
 kind: DaemonSet
 
 ## Override the namespace
