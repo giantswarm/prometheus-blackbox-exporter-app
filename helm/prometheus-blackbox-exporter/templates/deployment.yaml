@@ -57,12 +57,11 @@ spec:
         {{- end }}
       {{- end }}
       restartPolicy: {{ .Values.restartPolicy }}
-
       {{- if .Values.priorityClassName }}
       priorityClassName: "{{ .Values.priorityClassName }}"
       {{- end }}
       securityContext:
-{{ toYaml .Values.podSecurityContext | indent 8 }}  
+{{ toYaml .Values.podSecurityContext | indent 8 }}
       {{- if .Values.extraInitContainers }}
       initContainers:
 {{ toYaml .Values.extraInitContainers | indent 8 }}
@@ -70,12 +69,14 @@ spec:
       containers:
         {{- if .Values.extraContainers }}
 {{ toYaml .Values.extraContainers | indent 8 }}
-        {{- end }}      
+        {{- end }}
         - name: blackbox-exporter
           image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           securityContext:
-{{ toYaml .Values.securityContext | indent 12 }}
+          {{- with .Values.securityContext }}
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           env:
           {{- range $key, $value := .Values.extraEnv }}
             - name: {{ $key }}
@@ -130,9 +131,9 @@ spec:
         {{- toYaml .Values.dnsConfig | nindent 8 }}
 {{- end }}
       volumes:
-    {{- if .Values.extraVolumes }}      
-{{ toYaml .Values.extraVolumes | indent 8 }}      
-    {{- end }}      
+    {{- if .Values.extraVolumes }}
+{{ toYaml .Values.extraVolumes | indent 8 }}
+    {{- end }}
         - name: config
 {{- if .Values.secretConfig }}
           secret:

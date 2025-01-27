@@ -7,6 +7,14 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+### Changed
+
+- Harden security context to pass PSS compliance.
+
+### Removed
+
+- Remove PSP resources.
+
 ## [0.4.2] - 2024-06-25
 
 ### Fixed
