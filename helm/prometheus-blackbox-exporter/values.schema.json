@@ -474,19 +474,17 @@
         "securityContext": {
             "type": "object",
             "properties": {
-                "allowPrivilegeEscalation": {
-                    "type": "boolean"
-                },
-                "capabilities": {
+                "seccompProfile": {
                     "type": "object",
                     "properties": {
-                        "drop": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
+                        "type": {
+                            "type": "string"
                         }
                     }
+                },
+                "allowPrivilegeEscalation": {
+                    "type": "boolean",
+                    "default": false
                 },
                 "readOnlyRootFilesystem": {
                     "type": "boolean"
@@ -499,6 +497,21 @@
                 },
                 "runAsUser": {
                     "type": "integer"
+                },
+                "privileged": {
+                    "type": "boolean"
+                },
+                "capabilities":{
+                    "type": "object",
+                    "properties": {
+                        "drop": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "default": ["ALL"]
+                        }
+                    }
                 }
             }
         },
@@ -659,19 +672,6 @@
                     },
                     "operator": {
                         "type": "string"
-                    }
-                }
-            }
-        },
-        "global": {
-            "type": "object",
-            "properties": {
-                "podSecurityStandards": {
-                    "type": "object",
-                    "properties": {
-                        "enforced": {
-                            "type": "boolean"
-                        }
                     }
                 }
             }
