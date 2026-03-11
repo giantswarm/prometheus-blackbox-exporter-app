@@ -50,7 +50,7 @@ extraContainers: []
   #     - -https-address=:9116
   #     - -upstream=http://localhost:9115
   #     - -skip-auth-regex=^/metrics
-  #     - -openshift-delegate-urls={"/":{"group":"monitoring.coreos.com","resource":"prometheuses","verb":"get"}}
+  #     - -openshift-delegate-urls={"//":{"group":"monitoring.coreos.com","resource":"prometheuses","verb":"get"}}
   #   image: openshift/oauth-proxy:v1.1.0
   #   ports:
   #       - containerPort: 9116
@@ -228,7 +228,7 @@ resources:
     memory: 20Mi
     cpu: 10m
 
-priorityClassName: ""
+priorityClassName: system-node-critical
 
 service:
   annotations: {}
