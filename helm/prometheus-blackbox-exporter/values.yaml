@@ -228,7 +228,7 @@ resources:
     memory: 20Mi
     cpu: 10m
 
-priorityClassName: ""
+priorityClassName: system-node-critical
 
 service:
   annotations: {}
