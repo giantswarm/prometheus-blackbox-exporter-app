@@ -7,6 +7,8 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-03-24
+
 ### Added
 
 - Add `http_2xx_insecure` module with `insecure_skip_verify: true` to support probing workload cluster API servers from the management cluster. The MC's service account CA (`http_2xx_k8sca`) only covers the MC itself; workload clusters have their own CA which is not available to the blackbox exporter, making TLS verification impossible without this module.
@@ -100,7 +102,8 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 - First release featuring upstream version 7.5.0.
 
-[Unreleased]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.4.2...v0.5.0
