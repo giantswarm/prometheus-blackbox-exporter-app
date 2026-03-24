@@ -148,6 +148,20 @@ config:
         follow_redirects: true
         tls_config:
           ca_file: "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+    # http_2xx_insecure is intended for probing endpoints that use TLS certificates
+    # signed by a CA not available to the blackbox exporter (e.g. workload cluster API
+    # servers probed from the management cluster). The MC's service account CA only
+    # covers the MC itself, so workload cluster API servers require skipping TLS
+    # verification.
+    http_2xx_insecure:
+      prober: http
+      timeout: 5s
+      http:
+        valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+        preferred_ip_protocol: "ip4"
+        follow_redirects: true
+        tls_config:
+          insecure_skip_verify: true
     http_irsa_webhook:
       prober: http
       timeout: 5s
