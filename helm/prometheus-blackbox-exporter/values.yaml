@@ -382,3 +382,10 @@ dnsConfig:
 cluster:
   kubernetes:
     clusterDomain: cluster.local
+
+verticalPodAutoscaler:
+  enabled: true
+  containerPolicies:
+    - containerName: blackbox-exporter
+      controlledValues: RequestsAndLimits
+      mode: Auto

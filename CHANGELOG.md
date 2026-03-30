@@ -7,6 +7,10 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+### Added
+
+- Add VPA for `blackbox-exporter`. Uses `updateMode: Initial` for DaemonSet and `updateMode: Auto` for Deployment.
+
 ## [0.7.0] - 2026-03-24
 
 ### Added
