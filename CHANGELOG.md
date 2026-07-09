@@ -7,6 +7,10 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+### Fixed
+
+- Add `probe_target` label to ensure unique synthetic metrics
+
 ## [0.8.0] - 2026-05-28
 
 ### Added
