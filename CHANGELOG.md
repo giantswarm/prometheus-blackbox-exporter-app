@@ -11,6 +11,12 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 - Add VPA for `blackbox-exporter`. Uses `updateMode: Initial` for DaemonSet and `updateMode: Auto` for Deployment.
 
+## [0.8.0] - 2026-05-28
+
+### Added
+
+- Add toleration for `kubernetes.io/arch=arm64:NoSchedule` so the DaemonSet schedules on ARM worker nodes.
+
 ## [0.7.0] - 2026-03-24
 
 ### Added
@@ -106,7 +112,8 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 - First release featuring upstream version 7.5.0.
 
-[Unreleased]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/giantswarm/prometheus-blackbox-exporter-app/compare/v0.5.0...v0.5.1
