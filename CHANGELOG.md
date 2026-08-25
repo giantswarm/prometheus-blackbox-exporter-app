@@ -7,6 +7,10 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+### Added
+
+- Probe `github.com`, `gsoci.azurecr.io` and `grafana.com` from every node, so an allowlist-style firewall change blocking a single domain becomes visible. Adds the `http_2xx_or_401` module for registry endpoints that answer unauthenticated requests with 401. See giantswarm/giantswarm#33409.
+
 ### Fixed
 
 - Point the `dns-tcp-internal` and `dns-udp-internal` ServiceMonitors at the `dns_*_internal` modules. They referenced the `_external` modules, so both probed `www.prometheus.io` and in-cluster DNS resolution was never monitored.
