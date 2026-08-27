@@ -353,24 +353,6 @@ serviceMonitor:
       hostname: www.giantswarm.io
       interval: 30s
       module: http_2xx
-    # The following external targets cover the domains clusters depend on at runtime,
-    # so that an allowlist-style firewall change blocking a single domain is visible
-    # even while other domains stay reachable. See giantswarm/giantswarm#33409.
-    - name: http-github
-      target: https://github.com
-      hostname: github.com
-      interval: 30s
-      module: http_2xx
-    - name: http-gsoci-registry
-      target: https://gsoci.azurecr.io/v2/
-      hostname: gsoci.azurecr.io
-      interval: 30s
-      module: http_2xx_or_401
-    - name: http-grafana
-      target: https://grafana.com
-      hostname: grafana.com
-      interval: 30s
-      module: http_2xx
     - name: http-api
       target: https://kubernetes.default.svc.CLUSTERDOMAIN/livez
       hostname: kubernetes.default.svc.CLUSTERDOMAIN
@@ -388,6 +370,37 @@ serviceMonitor:
     - name: dns-udp-internal
       target: coredns
       module: dns_udp_external
+
+  # Test that domains required at cluster runtime are reachable, so that an
+  # allowlist-style firewall change blocking a single domain is visible even while
+  # other domains stay reachable. See giantswarm/giantswarm#33409.
+  # This is a map (not a list, like `targets` above) so per-installation, per-region
+  # or per-customer overrides can merge with the defaults: disable a single entry
+  # (`enabled: false`), change a single URL, or add entries without copying the whole
+  # list. Entry names must keep the `egress-` prefix - the
+  # ClusterInternetEgressUnavailable alert matches on it.
+  externalTargets:
+    github:
+      enabled: true
+      name: egress-github
+      target: https://github.com
+      hostname: github.com
+      interval: 30s
+      module: http_2xx
+    registry:
+      enabled: true
+      name: egress-registry
+      target: https://gsoci.azurecr.io/v2/
+      hostname: gsoci.azurecr.io
+      interval: 30s
+      module: http_2xx_or_401
+    grafana:
+      enabled: true
+      name: egress-grafana
+      target: https://grafana.com
+      hostname: grafana.com
+      interval: 30s
+      module: http_2xx
 
 ## Custom PrometheusRules to be defined
 ## ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions
