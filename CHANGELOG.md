@@ -7,6 +7,14 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+### Fixed
+
+- Point the `dns-tcp-internal` and `dns-udp-internal` ServiceMonitors at the `dns_*_internal` modules. They referenced the `_external` modules, so both probed `www.prometheus.io` and in-cluster DNS resolution was never monitored.
+
+### Removed
+
+- Remove the inert `instance` metric relabeling from the ServiceMonitor template. It interpolated a `url` field that no target defines, so it rendered empty and Prometheus fell back to its `$1` default, leaving `instance` unchanged.
+
 ## [0.9.0] - 2026-07-27
 
 ### Added
