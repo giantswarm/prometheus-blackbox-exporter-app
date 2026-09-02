@@ -402,6 +402,22 @@ serviceMonitor:
       interval: 30s
       module: http_2xx
 
+  # Additional egress probe entries, same shape as `externalTargets`. Keep the
+  # Giant Swarm defaults above untouched and put regional, installation or
+  # customer-specific entries here - a dedicated key means an override can never
+  # clobber the defaults, regardless of how the override side merges its YAML.
+  # An entry here with the same key as a default overrides that default.
+  additionalExternalTargets: {}
+  # Example:
+  # additionalExternalTargets:
+  #   aliyunRegistry:
+  #     enabled: true
+  #     name: egress-aliyun-registry
+  #     target: https://giantswarm-registry.cn-shanghai.cr.aliyuncs.com/v2/
+  #     hostname: giantswarm-registry.cn-shanghai.cr.aliyuncs.com
+  #     interval: 30s
+  #     module: http_2xx_or_401
+
 ## Custom PrometheusRules to be defined
 ## ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions
 prometheusRule:
