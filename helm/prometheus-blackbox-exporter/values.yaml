@@ -152,6 +152,16 @@ config:
         follow_redirects: true
         tls_config:
           ca_file: "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+    # http_2xx_or_401 is intended for probing endpoints that answer unauthenticated
+    # requests with 401 (e.g. an OCI registry's /v2/), which still proves reachability.
+    http_2xx_or_401:
+      prober: http
+      timeout: 5s
+      http:
+        valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+        valid_status_codes: [200, 401]
+        preferred_ip_protocol: "ip4"
+        follow_redirects: true
     # http_2xx_insecure is intended for probing endpoints that use TLS certificates
     # signed by a CA not available to the blackbox exporter (e.g. workload cluster API
     # servers probed from the management cluster). The MC's service account CA only
@@ -360,6 +370,53 @@ serviceMonitor:
     - name: dns-udp-internal
       target: coredns
       module: dns_udp_external
+
+  # Test that domains required at cluster runtime are reachable, so that an
+  # allowlist-style firewall change blocking a single domain is visible even while
+  # other domains stay reachable. See giantswarm/giantswarm#33409.
+  # This is a map (not a list, like `targets` above) so per-installation, per-region
+  # or per-customer overrides can merge with the defaults: disable a single entry
+  # (`enabled: false`), change a single URL, or add entries without copying the whole
+  # list. Entry names must keep the `egress-` prefix - the
+  # ClusterInternetEgressUnavailable alert matches on it.
+  externalTargets:
+    github:
+      enabled: true
+      name: egress-github
+      target: https://github.com
+      hostname: github.com
+      interval: 30s
+      module: http_2xx
+    registry:
+      enabled: true
+      name: egress-registry
+      target: https://gsoci.azurecr.io/v2/
+      hostname: gsoci.azurecr.io
+      interval: 30s
+      module: http_2xx_or_401
+    grafana:
+      enabled: true
+      name: egress-grafana
+      target: https://grafana.com
+      hostname: grafana.com
+      interval: 30s
+      module: http_2xx
+
+  # Additional egress probe entries, same shape as `externalTargets`. Keep the
+  # Giant Swarm defaults above untouched and put regional, installation or
+  # customer-specific entries here - a dedicated key means an override can never
+  # clobber the defaults, regardless of how the override side merges its YAML.
+  # An entry here with the same key as a default overrides that default.
+  additionalExternalTargets: {}
+  # Example:
+  # additionalExternalTargets:
+  #   aliyunRegistry:
+  #     enabled: true
+  #     name: egress-aliyun-registry
+  #     target: https://giantswarm-registry.cn-shanghai.cr.aliyuncs.com/v2/
+  #     hostname: giantswarm-registry.cn-shanghai.cr.aliyuncs.com
+  #     interval: 30s
+  #     module: http_2xx_or_401
 
 ## Custom PrometheusRules to be defined
 ## ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions
