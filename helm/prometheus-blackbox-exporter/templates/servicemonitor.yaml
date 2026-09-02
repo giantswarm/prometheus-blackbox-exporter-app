@@ -1,6 +1,7 @@
 {{- if .Values.serviceMonitor.enabled }}
 {{- $enabledExternal := list }}
-{{- range $key, $t := .Values.serviceMonitor.externalTargets }}
+{{- $externalTargets := mergeOverwrite (deepCopy (.Values.serviceMonitor.externalTargets | default dict)) (.Values.serviceMonitor.additionalExternalTargets | default dict) }}
+{{- range $key, $t := $externalTargets }}
 {{- if $t.enabled }}
 {{- $enabledExternal = append $enabledExternal $t }}
 {{- end }}
