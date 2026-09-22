@@ -10,9 +10,11 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 ### Added
 
 - Probe `github.com`, `gsoci.azurecr.io` and `grafana.com` from every node (targets `egress-github`, `egress-registry`, `egress-grafana`), so an allowlist-style firewall change blocking a single domain becomes visible. The new `serviceMonitor.externalTargets` value is a map so per-installation, per-region or per-customer overrides can disable, change or add individual entries without copying the whole list. A separate `serviceMonitor.additionalExternalTargets` key takes regional/customer additions, structurally separated from the Giant Swarm defaults. Adds the `http_2xx_or_401` module for registry endpoints that answer unauthenticated requests with 401. See giantswarm/giantswarm#33409.
+- Add the `http_2xx_egress` module, used by the internet egress targets. It carries a 15s timeout so `probe_success` reports whether an endpoint is reachable rather than whether it is fast. It is a separate module rather than a longer timeout on `http_2xx` because several installations pin `http_2xx` in their own custom values, which would silently revert the change there.
 
 ### Fixed
 
+- Give the internet egress targets a probe deadline above the cross-border baseline: `scrapeTimeout: 20s` on `http-giantswarm`, `egress-github`, `egress-registry` and `egress-grafana`, and a 15s timeout on `http_2xx_or_401`. The exporter applies `min(module timeout, scrapeTimeout - 0.5s offset)`, so the 5s `serviceMonitor.defaults.scrapeTimeout` capped every probe at a 4.5s deadline and raising a module timeout alone had no effect. Installations whose baseline latency is a large fraction of that deadline crossed it on endpoints that were still returning HTTP 200, making `probe_success` report latency rather than reachability.
 - Point the `dns-tcp-internal` and `dns-udp-internal` ServiceMonitors at the `dns_*_internal` modules. They referenced the `_external` modules, so both probed `www.prometheus.io` and in-cluster DNS resolution was never monitored.
 
 ### Removed
