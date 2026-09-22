@@ -40,9 +40,6 @@ spec:
       - {{ .query_name | replace "CLUSTERDOMAIN" $.Values.cluster.kubernetes.clusterDomain }}
       {{- end }}
     metricRelabelings:
-      - sourceLabels: [instance]
-        targetLabel: instance
-        replacement: {{ .url | quote }}
       - sourceLabels: [target]
         targetLabel: target
         replacement: {{ .name | quote }}

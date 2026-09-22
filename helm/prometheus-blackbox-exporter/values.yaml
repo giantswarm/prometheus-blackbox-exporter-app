@@ -356,10 +356,10 @@ serviceMonitor:
       module: dns_udp_external
     - name: dns-tcp-internal
       target: coredns
-      module: dns_tcp_external
+      module: dns_tcp_internal
     - name: dns-udp-internal
       target: coredns
-      module: dns_udp_external
+      module: dns_udp_internal
 
 ## Custom PrometheusRules to be defined
 ## ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions
