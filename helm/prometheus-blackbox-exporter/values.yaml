@@ -143,6 +143,26 @@ config:
         valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
         preferred_ip_protocol: "ip4"
         follow_redirects: true
+    # http_2xx_egress backs the internet egress probes, whose probe_success is read as
+    # "the endpoint is reachable", not "the endpoint is fast". Its timeout sits well above
+    # any healthy round trip: a deadline close to the observed latency turns a slow path
+    # into a reachability alert. Installations in AWS China baseline at ~0.9s to endpoints
+    # EU installations reach in ~50ms, and a routine cross-border slowdown pushed probes
+    # past the former 4.5s effective deadline while the responses still carried HTTP 200 -
+    # blackbox records the status code once the response headers arrive and only then
+    # fails on the body read, so probe_http_status_code 200 with probe_success 0 is the
+    # expected shape of a latency-induced failure.
+    # This is a separate module rather than a longer timeout on http_2xx because several
+    # installations pin http_2xx in their own custom values, which would silently revert
+    # the change there. Every target using this module also needs its scrapeTimeout
+    # raised - the effective deadline is min(module timeout, scrapeTimeout - 0.5s offset).
+    http_2xx_egress:
+      prober: http
+      timeout: 15s
+      http:
+        valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+        preferred_ip_protocol: "ip4"
+        follow_redirects: true
     http_2xx_k8sca:
       prober: http
       timeout: 5s
@@ -152,6 +172,16 @@ config:
         follow_redirects: true
         tls_config:
           ca_file: "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+    # http_2xx_or_401 is intended for probing endpoints that answer unauthenticated
+    # requests with 401 (e.g. an OCI registry's /v2/), which still proves reachability.
+    http_2xx_or_401:
+      prober: http
+      timeout: 15s
+      http:
+        valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+        valid_status_codes: [200, 401]
+        preferred_ip_protocol: "ip4"
+        follow_redirects: true
     # http_2xx_insecure is intended for probing endpoints that use TLS certificates
     # signed by a CA not available to the blackbox exporter (e.g. workload cluster API
     # servers probed from the management cluster). The MC's service account CA only
@@ -338,11 +368,19 @@ serviceMonitor:
   bearerTokenFile:
 
   targets:
+    # scrapeTimeout must be raised alongside the module timeout, not instead of it: the
+    # exporter applies min(module timeout, scrapeTimeout - 0.5s offset), so the 5s default
+    # in serviceMonitor.defaults capped every probe at a 4.5s deadline regardless of the
+    # module. It cannot be raised to 20s in serviceMonitor.defaults because the dns-*
+    # targets run at the 10s default interval and prometheus-operator drops any
+    # ServiceMonitor whose scrapeTimeout exceeds its interval; this target's own 30s
+    # interval leaves the room.
     - name: http-giantswarm
       target: https://www.giantswarm.io
       hostname: www.giantswarm.io
       interval: 30s
-      module: http_2xx
+      scrapeTimeout: 20s
+      module: http_2xx_egress
     - name: http-api
       target: https://kubernetes.default.svc.CLUSTERDOMAIN/livez
       hostname: kubernetes.default.svc.CLUSTERDOMAIN
@@ -360,6 +398,57 @@ serviceMonitor:
     - name: dns-udp-internal
       target: coredns
       module: dns_udp_internal
+
+  # Test that domains required at cluster runtime are reachable, so that an
+  # allowlist-style firewall change blocking a single domain is visible even while
+  # other domains stay reachable. See giantswarm/giantswarm#33409.
+  # This is a map (not a list, like `targets` above) so per-installation, per-region
+  # or per-customer overrides can merge with the defaults: disable a single entry
+  # (`enabled: false`), change a single URL, or add entries without copying the whole
+  # list. Entry names must keep the `egress-` prefix - the
+  # ClusterInternetEgressUnavailable alert matches on it.
+  externalTargets:
+    github:
+      enabled: true
+      name: egress-github
+      target: https://github.com
+      hostname: github.com
+      interval: 30s
+      scrapeTimeout: 20s
+      module: http_2xx_egress
+    registry:
+      enabled: true
+      name: egress-registry
+      target: https://gsoci.azurecr.io/v2/
+      hostname: gsoci.azurecr.io
+      interval: 30s
+      scrapeTimeout: 20s
+      module: http_2xx_or_401
+    grafana:
+      enabled: true
+      name: egress-grafana
+      target: https://grafana.com
+      hostname: grafana.com
+      interval: 30s
+      scrapeTimeout: 20s
+      module: http_2xx_egress
+
+  # Additional egress probe entries, same shape as `externalTargets`. Keep the
+  # Giant Swarm defaults above untouched and put regional, installation or
+  # customer-specific entries here - a dedicated key means an override can never
+  # clobber the defaults, regardless of how the override side merges its YAML.
+  # An entry here with the same key as a default overrides that default.
+  additionalExternalTargets: {}
+  # Example:
+  # additionalExternalTargets:
+  #   aliyunRegistry:
+  #     enabled: true
+  #     name: egress-aliyun-registry
+  #     target: https://giantswarm-registry.cn-shanghai.cr.aliyuncs.com/v2/
+  #     hostname: giantswarm-registry.cn-shanghai.cr.aliyuncs.com
+  #     interval: 30s
+  #     scrapeTimeout: 20s
+  #     module: http_2xx_or_401
 
 ## Custom PrometheusRules to be defined
 ## ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions

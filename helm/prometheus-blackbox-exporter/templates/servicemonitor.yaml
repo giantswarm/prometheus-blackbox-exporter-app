@@ -1,5 +1,12 @@
 {{- if .Values.serviceMonitor.enabled }}
-{{- range .Values.serviceMonitor.targets }}
+{{- $enabledExternal := list }}
+{{- $externalTargets := mergeOverwrite (deepCopy (.Values.serviceMonitor.externalTargets | default dict)) (.Values.serviceMonitor.additionalExternalTargets | default dict) }}
+{{- range $key, $t := $externalTargets }}
+{{- if $t.enabled }}
+{{- $enabledExternal = append $enabledExternal $t }}
+{{- end }}
+{{- end }}
+{{- range concat (.Values.serviceMonitor.targets | default list) $enabledExternal }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
