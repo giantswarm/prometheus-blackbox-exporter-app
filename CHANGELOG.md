@@ -17,6 +17,7 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ### Fixed
 
+- The DaemonSet omits `updateStrategy` when `daemonsetUpdateStrategy` is unset, for example overridden to `null`, instead of rendering `updateStrategy: null`.
 - The `helm.sh/chart` label is valid for long chart versions: the 63-character cut trims the whole trailing run of `-`, `.` and `_`.
 
 ## [0.10.0] - 2026-09-22

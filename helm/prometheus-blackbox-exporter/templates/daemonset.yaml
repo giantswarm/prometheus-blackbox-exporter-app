@@ -10,8 +10,10 @@ spec:
   selector:
     matchLabels:
       {{- include "prometheus-blackbox-exporter.selectorLabels" . | nindent 6 }}
+  {{- with .Values.daemonsetUpdateStrategy }}
   updateStrategy:
-{{ toYaml .Values.daemonsetUpdateStrategy | indent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   template:
     metadata:
       labels:
