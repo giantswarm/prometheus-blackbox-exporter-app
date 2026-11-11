@@ -239,6 +239,31 @@
         "containerPort": {
             "type": "integer"
         },
+        "daemonsetUpdateStrategy": {
+            "type": "object",
+            "properties": {
+                "rollingUpdate": {
+                    "type": "object",
+                    "properties": {
+                        "maxSurge": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ]
+                        },
+                        "maxUnavailable": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ]
+                        }
+                    }
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "dnsConfig": {
             "type": "null"
         },

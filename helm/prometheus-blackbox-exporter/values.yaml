@@ -73,6 +73,13 @@ strategy:
     maxUnavailable: 0
   type: RollingUpdate
 
+## Update strategy of the DaemonSet (only used when kind is DaemonSet).
+## Replacing several pods at once keeps the rollout short on large clusters.
+daemonsetUpdateStrategy:
+  rollingUpdate:
+    maxUnavailable: 10%
+  type: RollingUpdate
+
 image:
   registry: gsoci.azurecr.io
   name: giantswarm/blackbox-exporter

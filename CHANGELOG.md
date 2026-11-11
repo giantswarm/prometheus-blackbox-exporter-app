@@ -7,6 +7,14 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+### Added
+
+- Add the `daemonsetUpdateStrategy` value to set the update strategy of the DaemonSet.
+
+### Changed
+
+- The DaemonSet replaces up to 10% of its pods at a time during an update (`rollingUpdate.maxUnavailable: 10%`). An update replaced one pod at a time, so it exceeded the Helm release timeout on large workload clusters.
+
 ### Fixed
 
 - The `helm.sh/chart` label is valid for long chart versions: the 63-character cut trims the whole trailing run of `-`, `.` and `_`.
